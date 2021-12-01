@@ -307,7 +307,8 @@ with col3: st.info(str(len(alldecks)) + " Decks found." + "  \n" +  "Recommended
 # =============================================================================
 col5, col6 = st.columns(2)
 #RL
-with col5: restrictedListTitle = st.selectbox("Restricted List", ["No Restricted List"] + allRL.sort_values('effectiveOn', ascending = False, axis = 0)['title'].tolist()) #"gotstandard1.1" #"gotvalyrian1.0" # With Redesigns (Standard): "gotstandard1.1" - No Redesigns (Valyrian): "gotvalyrian1.0"
+lstRLSelection = ["Standard v1.1", "Valyrian v1.0", "FFG FAQ v3.0"]
+with col5: restrictedListTitle = st.selectbox("Restricted List", ["No Restricted List"] + allRL[allRL.title.isin(lstRLSelection)].sort_values('effectiveOn', ascending = False, axis = 0)['title'].tolist()) #"gotstandard1.1" #"gotvalyrian1.0" # With Redesigns (Standard): "gotstandard1.1" - No Redesigns (Valyrian): "gotvalyrian1.0"
 with col6: JoustMelee = st.radio("", options = ['joust','melee']) #'joust' #'melee' #
 #Cardbase
 blAllowAfterRedesigns = not st.checkbox("Don't use Cards after Redesigns")#False 
