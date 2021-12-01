@@ -371,7 +371,7 @@ if st.button('Generate Decklist'):
         strDeckSummary = "Decks: " + str(len(alldecks)) + " (creationdate: " + alldecks.iloc[0]["date_creation"][0:10] +" to "+ alldecks.iloc[-1]["date_creation"][0:10] +")" 
         strFactor = "The latest {}% of all decks on thronesdb.com are taken into account. Excluding decks with more than 110 cards in their drawdeck.".format(factor)
         strSelectionSummary = "**Selection Summary**" + "  \n" + strDeckSummary + "  \n" + "Faction: " + strFaction + "  \n" + "Agenda: " + strAgenda + ("  \n" + "Only Decks which include the following cards: " + ", ".join(lstCardlabels) if len(lstCardlabels) != 0 else "") + "  \n" + "Restricted List: " + restrictedListTitle + " " + JoustMelee + "  \n" + ("No Cards after Redesigns" if blAllowAfterRedesigns else "With Cards after Redesigns") + "  \n" + strFactor
-        strRemarks =  "Deck Size: " + str(totalcards) + " | Characters: " + str(includeCharacters) + " | Limiteds: " + str(includeLimiteds) + "  \n" + "(Deck Size and included number of Characters and Limiteds are chosen by rounded Averages.)"
+        strRemarks =  "Deck Size: " + str(totalcards) + " | Characters: " + str(includeCharacters) + " | Limiteds: " + str(includeLimiteds) + "  \n" + "(chosen by rounded averages.)"
         #"**Remarks:**"   + "  \n" + "  \n" + "Only Cards which are in 3 or more Decks are analyzed."
         strNotes = strSelectionSummary + "  \n"  + strRemarks + "\n" + "\n" + strNotes 
         my_bar.progress(100)
