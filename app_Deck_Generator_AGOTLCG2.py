@@ -261,10 +261,10 @@ st.title("Decklist Generator" + "  \n"  + "for A Game of Thrones LCG 2nd Edition
 # =============================================================================
 # EINMALIG!!! load Decks, cards, packs, restricted Lists from .json file
 # =============================================================================
-alldecks = pd.read_json("Decks.json")
-allcards = pd.read_json("AllCards.json", dtype={'code': 'string'})
-allpacks = pd.read_json("AllPacks.json")
-allRL = pd.read_json("RestrictedLists.json") 
+alldecks = pd.read_json("data/Decks.json")
+allcards = pd.read_json("data/AllCards.json", dtype={'code': 'string'})
+allpacks = pd.read_json("data/AllPacks.json")
+allRL = pd.read_json("data/RestrictedLists.json") 
 
 # ADD 'available' to get releasedate for cards -> further steps more easy
 allcards = pd.merge(allcards, allpacks[['code', 'available']], left_on='pack_code', right_on='code', how="left", suffixes=('', '_y'))
