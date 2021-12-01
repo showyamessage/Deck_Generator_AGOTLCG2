@@ -228,7 +228,7 @@ def get_Notes(dfNotes):
     dictincludedByName = dfincludedByName[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
 
     #str
-    strAgendas = "**Agendas (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictAgendas[i],0))) + "%)" for i in list(dictAgendas.keys())[0:noteagendas]]) + "."
+    strAgendas = "**Agendas (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i[:-2] + "(" + str(int(round(100*dictAgendas[i],0))) + "%)" for i in list(dictAgendas.keys())[0:noteagendas]]) + "."
     strOtherVersions = "**Alternative Versions (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherVersions[i],0))) + "%)" for i in dictOtherVersions.keys()]) + "."
     strOtherRestricted = "**Restricted Cards (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherRestricted[i],0))) + "%)" for i in dictOtherRestricted.keys()]) + "."
     strPods = "**Pod Cards (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictPods[i],0))) + "%)" for i in dictPods.keys()]) + "."
