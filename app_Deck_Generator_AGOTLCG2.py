@@ -1,7 +1,7 @@
 #streamlit run C:\Users\braun\Documents\Thrones\streamlit\Deck_Generator_AGOTLCG2\app_Deck_Generator_AGOTLCG2.py
 import time
 import streamlit as st
-import plotly.express as px
+#import plotly.express as px
 import pandas as pd
 
 # =============================================================================
