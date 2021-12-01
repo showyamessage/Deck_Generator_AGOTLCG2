@@ -370,8 +370,9 @@ if st.button('Generate Decklist'):
         strDecklist = strTitle + "\n" + "\n" + strFaction + "\n" + "\n" + (strAgenda if strAgenda != "All Agendas" else "") + "\n" + "\n" + strDecklist 
         strSelectionSummary = "**Selection Summary**" + "  \n"  + "Faction: " + strFaction + "  \n" + "Agenda: " + strAgenda + ("  \n" + "Only Decks which include the following cards: " + ", ".join(lstCardlabels) if len(lstCardlabels) != 0 else "") + "  \n" + "Restricted List: " + restrictedListTitle + " " + JoustMelee + "  \n" + ("No Cards after Redesigns" if blAllowAfterRedesigns else "With Cards after Redesigns")
         strDeckSummary = "Decks: " + str(len(alldecks)) + " (creationdate: " + alldecks.iloc[0]["date_creation"][0:10] +" to "+ alldecks.iloc[-1]["date_creation"][0:10] +")" 
-        strRemarks = "**Remarks:**" + "  \n" + "The latest {}% of all decks on thronesdb.com are taken into account. Excluding decks with more than 110 cards in their drawdeck.".format(factor) + "  \n" + "Only Cards which are in 3 or more Decks are analyzed." + "  \n" + "Deck Size and included number of Characters and Limiteds are chosen by rounded Averages."  + "  \n" + "(Deck Size: " + str(totalcards) + " Characters: " + str(includeCharacters) + " Limiteds: " + str(includeLimiteds) +")" 
-        strNotes = strSelectionSummary + "  \n"  + strDeckSummary + "\n" + "\n" + strNotes + "\n" + "\n" + strRemarks
+        strRemarks = "**Remarks:**" + "  \n" + "The latest {}% of all decks on thronesdb.com are taken into account. Excluding decks with more than 110 cards in their drawdeck.".format(factor)  + "  \n" + "Deck Size and included number of Characters and Limiteds are chosen by rounded Averages."  + "  \n" + "(Deck Size: " + str(totalcards) + " Characters: " + str(includeCharacters) + " Limiteds: " + str(includeLimiteds) +")" 
+        #+ "  \n" + "Only Cards which are in 3 or more Decks are analyzed."
+        strNotes = strSelectionSummary + "\n" + "\n" + strRemarks + "  \n"  + strDeckSummary + "\n" + "\n" + strNotes 
         my_bar.progress(100)
         #Ausgabe
         col7, col8 = st.columns(2)
