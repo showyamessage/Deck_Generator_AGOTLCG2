@@ -228,15 +228,15 @@ def get_Notes(dfNotes):
     dictincludedByName = dfincludedByName[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
 
     #str
-    strAgendas = "**Agendas (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i[:-2] + "(" + str(int(round(100*dictAgendas[i],0))) + "%)" for i in list(dictAgendas.keys())[0:noteagendas]]) + "."
-    strOtherVersions = "**Alternative Versions (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherVersions[i],0))) + "%)" for i in dictOtherVersions.keys()]) + "."
-    strOtherRestricted = "**Restricted Cards (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherRestricted[i],0))) + "%)" for i in dictOtherRestricted.keys()]) + "."
-    strPods = "**Pod Cards (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictPods[i],0))) + "%)" for i in dictPods.keys()]) + "."
-    strLimiteds = "**Limiteds (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictLimiteds[i],0))) + "%)" for i in dictLimiteds.keys()]) + "."
+    strAgendas = "**Agendas (% in Decks since release):** " + "  \n"  + "  \n".join([i[:-2] + "(" + str(int(round(100*dictAgendas[i],0))) + "%)" for i in list(dictAgendas.keys())[0:noteagendas]]) + "."
+    strOtherVersions = "**Alternative Versions (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherVersions[i],0))) + "%)" for i in dictOtherVersions.keys()]) + "."
+    strOtherRestricted = "**Restricted Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherRestricted[i],0))) + "%)" for i in dictOtherRestricted.keys()]) + "."
+    strPods = "**Pod Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictPods[i],0))) + "%)" for i in dictPods.keys()]) + "."
+    strLimiteds = "**Limiteds (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictLimiteds[i],0))) + "%)" for i in dictLimiteds.keys()]) + "."
     #Other Cards
-    strPlots = "**Other Plots (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictPlots[i],0))) + "%)" for i in list(dictPlots.keys())[0:noteplots]]) + "."
-    strDrawdeck = "**Other Cards (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDrawdeck[i],0))) + "%)" for i in list(dictDrawdeck.keys())[0:notedrawdeck]]) + "."
-    strincludedByName = "**Included by Name (% in Decks since release of the card):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictincludedByName[i],0))) + "%)" for i in dictincludedByName.keys()]) + "."
+    strPlots = "**Other Plots (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictPlots[i],0))) + "%)" for i in list(dictPlots.keys())[0:noteplots]]) + "."
+    strDrawdeck = "**Other Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDrawdeck[i],0))) + "%)" for i in list(dictDrawdeck.keys())[0:notedrawdeck]]) + "."
+    strincludedByName = "**Included by Name (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictincludedByName[i],0))) + "%)" for i in dictincludedByName.keys()]) + "."
     
     Notes = strAgendas  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
     return Notes
@@ -371,9 +371,9 @@ if st.button('Generate Decklist'):
         strDeckSummary = "Decks: " + str(len(alldecks)) + " (creationdate: " + alldecks.iloc[0]["date_creation"][0:10] +" to "+ alldecks.iloc[-1]["date_creation"][0:10] +")" 
         strFactor = "The latest {}% of all decks on thronesdb.com are taken into account. Excluding decks with more than 110 cards in their drawdeck.".format(factor)
         strSelectionSummary = "**Selection Summary**" + "  \n" + strDeckSummary + "  \n" + "Faction: " + strFaction + "  \n" + "Agenda: " + strAgenda + ("  \n" + "Only Decks which include the following cards: " + ", ".join(lstCardlabels) if len(lstCardlabels) != 0 else "") + "  \n" + "Restricted List: " + restrictedListTitle + " " + JoustMelee + "  \n" + ("No Cards after Redesigns" if blAllowAfterRedesigns else "With Cards after Redesigns") + "  \n" + strFactor
-        strRemarks =  "Deck Size: " + str(totalcards) + " |Characters: " + str(includeCharacters) + " |Limiteds: " + str(includeLimiteds) + "  \n" + "(Deck Size and included number of Characters and Limiteds are chosen by rounded Averages.)"
+        strRemarks =  "Deck Size: " + str(totalcards) + " | Characters: " + str(includeCharacters) + " | Limiteds: " + str(includeLimiteds) + "  \n" + "(Deck Size and included number of Characters and Limiteds are chosen by rounded Averages.)"
         #"**Remarks:**"   + "  \n" + "  \n" + "Only Cards which are in 3 or more Decks are analyzed."
-        strNotes = strSelectionSummary + "\n" + "\n" + strRemarks + "\n" + "\n" + strNotes 
+        strNotes = strSelectionSummary + "  \n"  + strRemarks + "\n" + "\n" + strNotes 
         my_bar.progress(100)
         #Ausgabe
         col7, col8 = st.columns(2)
