@@ -301,7 +301,7 @@ if strAgenda != "All Agendas": #Agenda #BY NAME NOT LABEL!
 for strCardlabel in lstCardlabels: #"slots": {"01002": 1, ... }
     curr_code =  allcards[allcards['label'] == strCardlabel].iloc[0]['code'] #[x["code"] for x in allcards if x["label"] == strCardlabel][0]
     alldecks = alldecks[alldecks.apply(lambda row: curr_code in row["slots"].keys(), axis=1)]
-with col3: st.info(str(len(alldecks)) + " Decks found. Recommended: <100 (avoid long runtime)") #st.markdown('<p class="big-font">'+ "Decks: " + str(len(alldecks))  + '</p>', unsafe_allow_html=True)
+with col3: st.info(str(len(alldecks)) + " Decks found." + "  \n" +  "Recommended: <100 (avoid long runtime)") #st.markdown('<p class="big-font">'+ "Decks: " + str(len(alldecks))  + '</p>', unsafe_allow_html=True)
         
 # =============================================================================
 # weitere Parameter
