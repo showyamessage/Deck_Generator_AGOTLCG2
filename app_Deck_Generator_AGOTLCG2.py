@@ -23,7 +23,7 @@ def GetCardsInDecks(dfCards,dfDecks):
     
     #deckcount
     dfCards1['deckcount'] = dfCards1.apply(lambda rowCards: len(dfDecks[dfDecks.apply(lambda rowDecks: rowCards['code'] in rowDecks["slots"].keys(), axis=1)]), axis=1)
-    dfCards1 = dfCards1[dfCards1['deckcount'] > 2]
+    dfCards1 = dfCards1[dfCards1['deckcount'] > 0]
     
     dfCards2 = dfCards1.copy()
     dfCards2['deckcount'] = dfCards2.apply(lambda rowCards: len(dfDecks[dfDecks.apply(lambda rowDecks: rowCards['code'] in rowDecks["slots"].keys() and rowDecks["slots"][rowCards['code']] >= 2, axis=1)]), axis=1)
