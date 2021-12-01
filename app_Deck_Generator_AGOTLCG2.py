@@ -373,7 +373,7 @@ if st.button('Generate Decklist'):
         strSelectionSummary = "**Selection Summary**" + "  \n" + strDeckSummary + "  \n" + "Faction: " + strFaction + "  \n" + "Agenda: " + strAgenda + ("  \n" + "Only Decks which include the following cards: " + ", ".join(lstCardlabels) if len(lstCardlabels) != 0 else "") + "  \n" + "Restricted List: " + restrictedListTitle + " " + JoustMelee + "  \n" + ("No Cards after Redesigns" if blAllowAfterRedesigns else "With Cards after Redesigns") + "  \n" + strFactor
         strRemarks =  "Deck Size: " + str(totalcards) + " |Characters: " + str(includeCharacters) + " |Limiteds: " + str(includeLimiteds) + "  \n" + "(Deck Size and included number of Characters and Limiteds are chosen by rounded Averages.)"
         #"**Remarks:**"   + "  \n" + "  \n" + "Only Cards which are in 3 or more Decks are analyzed."
-        strNotes = strSelectionSummary + "\n" + strRemarks + "\n" + "\n" + strNotes 
+        strNotes = strSelectionSummary + "\n" + "\n" + strRemarks + "\n" + "\n" + strNotes 
         my_bar.progress(100)
         #Ausgabe
         col7, col8 = st.columns(2)
