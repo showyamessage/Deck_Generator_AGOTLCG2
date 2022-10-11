@@ -282,7 +282,7 @@ with col2: strAgenda = st.selectbox("Agenda", ["All Agendas"] + sorted(allcards[
 lstCardlabels = st.multiselect("Cards used", sorted(allcards[allcards['type_code'] != "agenda"]['label'].unique())) #["Missandei"] #23 VS Decks. 22 VS Decks with Missandei
 #st.write("Selected Cards:", lstCardlabels)
 col3, col4 = st.columns(2)
-with col4: factor = st.slider(label="% of latest uploaded Decks", min_value=0, max_value=100, value=33) #33 = Default
+with col4: factor = st.slider(label="% of latest uploaded Decks", min_value=1, max_value=100, value=33) #33 = Default
 
 #lstNoAgenda = []
 #lstNoCardlabels = [] #'"faction_name": "Harrenhal (FFH)"'
