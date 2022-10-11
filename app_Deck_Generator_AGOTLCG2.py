@@ -320,70 +320,73 @@ blAllowAfterRedesigns = not st.checkbox("Don't use Cards after Redesigns")#False
 # =============================================================================
 
 
-if st.button('Generate Decklist'):
-    with st.spinner('In Progress...'):
-        my_bar = st.progress(0)
-        #Select Cards
-        DoNotUsePacks = ["Valyrian Draft Set","Kingsmoot Variant","Hand of the King Variant"]
-        if not blAllowAfterRedesigns:
-            PacksAfterRedesign = allpacks[allpacks['available'] > allpacks[allpacks['name'] == "Redesigns"].iloc[0]['available']]['name'].tolist()#=[i for i in AllPacks if (date.fromisoformat(releaseRedesign) <= date.fromisoformat(i["available"]))]
-            DoNotUsePacks = DoNotUsePacks + PacksAfterRedesign
-        relevantcards = allcards[~allcards.pack_name.isin(DoNotUsePacks)]
-        #1 generate Dataframe with List of Cards in Decks
-        dfCardsInDecks = GetCardsInDecks(relevantcards,alldecks)
-        #st.dataframe(dfCardsInDecks[['label', 'copy', 'in decks']].head())
-        #2 trägt Deckbau-Entscheidungen ein 
-        # Select Restricted List
-        #Redesign-Cards are handled with restricted List (Valyrian or Standard)
-        if restrictedListTitle != "No Restricted List":
-            RL = allRL[allRL['title'] == restrictedListTitle].iloc[0]['contents'][JoustMelee]
-        else:
-            RL = {'banned': [], 'restricted': [], 'restricted_pods': []}
-        #dict for shorter runtime
-        dictCodeType = allcards[['code', 'type_code']].set_index('code').to_dict()['type_code']
-        allcards['limited'] = allcards.apply(lambda rowCards: rowCards['text'].find("Limited.") >-1, axis=1)
-        dictCodeLimited = allcards[['code', 'limited']].set_index('code').to_dict()['limited']
-        #calculate mean
-        alldecks['count_plot'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeType[key] == "plot"]), axis=1)
-        alldecks['count_drawdeck'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeType[key] != "plot"]), axis=1)
-        alldecks['count_character'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeType[key] == "character"]), axis=1)
-        alldecks['count_limited'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeLimited[key]]), axis=1)
-        dictCountTypes = alldecks[['count_plot', 'count_drawdeck', 'count_character', 'count_limited']].mean().to_dict()
-        #get parameters
-        totalplots = 7
-        meanDrawdeck = round(dictCountTypes['count_drawdeck'])
-        if meanDrawdeck >= 88:
-            totalcards = 100
-        elif meanDrawdeck >= 68:
-            totalcards = 75
-        else:
-            totalcards = 60
-        includeCharacters = round(dictCountTypes['count_character'])
-        includeLimiteds = round(dictCountTypes['count_limited'])
-        #Deckbau Entscheidungen eintragen
-        dfFinal = GenerateDecklist(dfCardsInDecks, RL, totalcards, totalplots, includeCharacters, includeLimiteds)
-        
-        #3 generiert daraus decklist und Notes
-        strDecklist = get_Decklist(dfFinal)
-        strNotes = get_Notes(dfFinal)
-        #Decklist und Notes ergänzen
-        strTitle = "**" + strFaction + "-" + strAgenda + "-" + restrictedListTitle + "-" + JoustMelee + "-{}%".format(factor) + "**"
-        strDecklist = strTitle + "\n" + "\n" + strFaction + "\n" + "\n" + (strAgenda if strAgenda != "All Agendas" else "") + "\n" + "\n" + strDecklist 
-        strDeckSummary = "Decks: " + str(len(alldecks)) + " (creationdate: " + alldecks.iloc[0]["date_creation"][0:10] +" to "+ alldecks.iloc[-1]["date_creation"][0:10] +")" 
-        strFactor = "The latest {}% of all decks on thronesdb.com are taken into account. Excluding decks with more than 110 cards in their drawdeck.".format(factor)
-        strSelectionSummary = "**Selection Summary**" + "  \n" + strDeckSummary + "  \n" + "Faction: " + strFaction + "  \n" + "Agenda: " + strAgenda + ("  \n" + "Only Decks which include the following cards: " + ", ".join(lstCardlabels) if len(lstCardlabels) != 0 else "") + "  \n" + "Restricted List: " + restrictedListTitle + " " + JoustMelee + "  \n" + ("With Cards after Redesigns" if blAllowAfterRedesigns else "No Cards after Redesigns") + "  \n" + strFactor
-        strRemarks =  "Deck Size: " + str(totalcards) + " | Characters: " + str(includeCharacters) + " | Limiteds: " + str(includeLimiteds) + "  \n" + "(chosen by rounded averages.)"
-        #"**Remarks:**"   + "  \n" + "  \n" + "Only Cards which are in 3 or more Decks are analyzed."
-        strNotes = strSelectionSummary + "  \n"  + strRemarks + "\n" + "\n" + strNotes 
-        my_bar.progress(100)
-        #Ausgabe
-        col7, col8 = st.columns(2)
-        with col7:
-            st.header("DECKLIST")
-            st.download_button(label="Save Decklist as .txt", data=strDecklist.replace("**", ""), file_name=strTitle +'.txt')
-            st.markdown(strDecklist)
-        with col8:
-            st.header("NOTES")
-            st.download_button(label="Save Notes as .txt", data=strNotes.replace("**", ""), file_name=strTitle + "(NOTES)" +'.txt')
-            st.markdown(strNotes)
-        my_bar.empty()
+if len(alldecks) == 0:
+    st.error("NO DECKS FOUND FOR YOUR OPTIONS! (Maybe your options are too specific. Please change your input and look at the Deckcount above.) \n \n The 'Generate Decklist'-Button will appear if at least 1 Deck fits your options.")
+else:
+    if st.button('Generate Decklist'):
+        with st.spinner('In Progress...'):
+            my_bar = st.progress(0)
+            #Select Cards
+            DoNotUsePacks = ["Valyrian Draft Set","Kingsmoot Variant","Hand of the King Variant"]
+            if not blAllowAfterRedesigns:
+                PacksAfterRedesign = allpacks[allpacks['available'] > allpacks[allpacks['name'] == "Redesigns"].iloc[0]['available']]['name'].tolist()#=[i for i in AllPacks if (date.fromisoformat(releaseRedesign) <= date.fromisoformat(i["available"]))]
+                DoNotUsePacks = DoNotUsePacks + PacksAfterRedesign
+            relevantcards = allcards[~allcards.pack_name.isin(DoNotUsePacks)]
+            #1 generate Dataframe with List of Cards in Decks
+            dfCardsInDecks = GetCardsInDecks(relevantcards,alldecks)
+            #st.dataframe(dfCardsInDecks[['label', 'copy', 'in decks']].head())
+            #2 trägt Deckbau-Entscheidungen ein 
+            # Select Restricted List
+            #Redesign-Cards are handled with restricted List (Valyrian or Standard)
+            if restrictedListTitle != "No Restricted List":
+                RL = allRL[allRL['title'] == restrictedListTitle].iloc[0]['contents'][JoustMelee]
+            else:
+                RL = {'banned': [], 'restricted': [], 'restricted_pods': []}
+            #dict for shorter runtime
+            dictCodeType = allcards[['code', 'type_code']].set_index('code').to_dict()['type_code']
+            allcards['limited'] = allcards.apply(lambda rowCards: rowCards['text'].find("Limited.") >-1, axis=1)
+            dictCodeLimited = allcards[['code', 'limited']].set_index('code').to_dict()['limited']
+            #calculate mean
+            alldecks['count_plot'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeType[key] == "plot"]), axis=1)
+            alldecks['count_drawdeck'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeType[key] != "plot"]), axis=1)
+            alldecks['count_character'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeType[key] == "character"]), axis=1)
+            alldecks['count_limited'] = alldecks.apply(lambda rowDecks: sum([rowDecks['slots'][key] for key in rowDecks['slots'].keys() if dictCodeLimited[key]]), axis=1)
+            dictCountTypes = alldecks[['count_plot', 'count_drawdeck', 'count_character', 'count_limited']].mean().to_dict()
+            #get parameters
+            totalplots = 7
+            meanDrawdeck = round(dictCountTypes['count_drawdeck'])
+            if meanDrawdeck >= 88:
+                totalcards = 100
+            elif meanDrawdeck >= 68:
+                totalcards = 75
+            else:
+                totalcards = 60
+            includeCharacters = round(dictCountTypes['count_character'])
+            includeLimiteds = round(dictCountTypes['count_limited'])
+            #Deckbau Entscheidungen eintragen
+            dfFinal = GenerateDecklist(dfCardsInDecks, RL, totalcards, totalplots, includeCharacters, includeLimiteds)
+            
+            #3 generiert daraus decklist und Notes
+            strDecklist = get_Decklist(dfFinal)
+            strNotes = get_Notes(dfFinal)
+            #Decklist und Notes ergänzen
+            strTitle = "**" + strFaction + "-" + strAgenda + "-" + restrictedListTitle + "-" + JoustMelee + "-{}%".format(factor) + "**"
+            strDecklist = strTitle + "\n" + "\n" + strFaction + "\n" + "\n" + (strAgenda if strAgenda != "All Agendas" else "") + "\n" + "\n" + strDecklist 
+            strDeckSummary = "Decks: " + str(len(alldecks)) + " (creationdate: " + alldecks.iloc[0]["date_creation"][0:10] +" to "+ alldecks.iloc[-1]["date_creation"][0:10] +")" 
+            strFactor = "The latest {}% of all decks on thronesdb.com are taken into account. Excluding decks with more than 110 cards in their drawdeck.".format(factor)
+            strSelectionSummary = "**Selection Summary**" + "  \n" + strDeckSummary + "  \n" + "Faction: " + strFaction + "  \n" + "Agenda: " + strAgenda + ("  \n" + "Only Decks which include the following cards: " + ", ".join(lstCardlabels) if len(lstCardlabels) != 0 else "") + "  \n" + "Restricted List: " + restrictedListTitle + " " + JoustMelee + "  \n" + ("With Cards after Redesigns" if blAllowAfterRedesigns else "No Cards after Redesigns") + "  \n" + strFactor
+            strRemarks =  "Deck Size: " + str(totalcards) + " | Characters: " + str(includeCharacters) + " | Limiteds: " + str(includeLimiteds) + "  \n" + "(chosen by rounded averages.)"
+            #"**Remarks:**"   + "  \n" + "  \n" + "Only Cards which are in 3 or more Decks are analyzed."
+            strNotes = strSelectionSummary + "  \n"  + strRemarks + "\n" + "\n" + strNotes 
+            my_bar.progress(100)
+            #Ausgabe
+            col7, col8 = st.columns(2)
+            with col7:
+                st.header("DECKLIST")
+                st.download_button(label="Save Decklist as .txt", data=strDecklist.replace("**", ""), file_name=strTitle +'.txt')
+                st.markdown(strDecklist)
+            with col8:
+                st.header("NOTES")
+                st.download_button(label="Save Notes as .txt", data=strNotes.replace("**", ""), file_name=strTitle + "(NOTES)" +'.txt')
+                st.markdown(strNotes)
+            my_bar.empty()
