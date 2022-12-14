@@ -183,7 +183,7 @@ def get_Decklist(dfDeck):
 def get_Notes(dfNotes):
     #How many Cards by Type should be in the notes?
     noteagendas = 6
-    noteplots = 10
+    noteplots = 15
     notedrawdeck = 60
     # notecharacters = 30
     # notelocations = 20
