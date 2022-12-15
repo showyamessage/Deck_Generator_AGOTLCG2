@@ -242,7 +242,7 @@ def get_Notes(dfNotes):
     strDeck = "**Deck (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeck[i],0))) + "%)" for i in dictDeck.keys()]) + "."
     strDeckPlots = "**Plots (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeckPlots[i],0))) + "%)" for i in dictDeckPlots.keys()]) + "."
     
-    Notes = strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strAgendas  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
+    Notes = strAgendas  + "\n" + "\n" +  strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
     return Notes
 
 
