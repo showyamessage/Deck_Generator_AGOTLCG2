@@ -236,8 +236,10 @@ def get_Notes(dfNotes):
     strPlots = "**Other Plots (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictPlots[i],0))) + "%)" for i in list(dictPlots.keys())[0:noteplots]]) + "."
     strDrawdeck = "**Other Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDrawdeck[i],0))) + "%)" for i in list(dictDrawdeck.keys())[0:notedrawdeck]]) + "."
     strincludedByName = "**Included by Name (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictincludedByName[i],0))) + "%)" for i in dictincludedByName.keys()]) + "."
+    #Deck
+    strDeck = "**Deck (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDrawdeck[i],0))) + "%)" for i in dictDrawdeck.keys()]) + "."
     
-    Notes = strAgendas  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
+    Notes = strDeck  + "\n" + "\n" +  strAgendas  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
     return Notes
 
 
