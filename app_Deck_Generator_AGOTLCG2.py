@@ -216,8 +216,8 @@ def get_Notes(dfNotes):
     dfincludedByName = pd.concat([dfDeck[dfDeck['in decks'] < minInDecks], dfDeckPlots[dfDeckPlots['in decks'] < minInDecksPlots]]).sort_values('in decks', ascending = False, axis = 0)  #Would not have made it. But in sum all Cards with that name are used enough.
     
     #dict
-    dictDeck = dfDrawdeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
-    dictDeckPlots = dfDrawdeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
+    dictDeck = dfDeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
+    dictDeckPlots = dfDeckPlots[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictAgendas = dfAgendas[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherVersions = dfOtherVersions[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherRestricted = dfOtherRestricted[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
