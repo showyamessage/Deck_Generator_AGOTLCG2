@@ -183,7 +183,7 @@ def get_Decklist(dfDeck):
 def get_Notes(dfNotes):
     #How many Cards by Type should be in the notes?
     noteagendas = 6
-    noteplots = 30
+    noteplots = 15
     notedrawdeck = 60
     # notecharacters = 30
     # notelocations = 20
@@ -216,6 +216,8 @@ def get_Notes(dfNotes):
     dfincludedByName = pd.concat([dfDeck[dfDeck['in decks'] < minInDecks], dfDeckPlots[dfDeckPlots['in decks'] < minInDecksPlots]]).sort_values('in decks', ascending = False, axis = 0)  #Would not have made it. But in sum all Cards with that name are used enough.
     
     #dict
+    dictDeck = dfDrawdeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
+    dictDeckPlots = dfDrawdeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictAgendas = dfAgendas[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherVersions = dfOtherVersions[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherRestricted = dfOtherRestricted[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
@@ -237,9 +239,10 @@ def get_Notes(dfNotes):
     strDrawdeck = "**Other Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDrawdeck[i],0))) + "%)" for i in list(dictDrawdeck.keys())[0:notedrawdeck]]) + "."
     strincludedByName = "**Included by Name (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictincludedByName[i],0))) + "%)" for i in dictincludedByName.keys()]) + "."
     #Deck
-    strDeck = "**Deck (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDrawdeck[i],0))) + "%)" for i in dictDrawdeck.keys()]) + "."
+    strDeck = "**Deck (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeck[i],0))) + "%)" for i in dictDeck.keys()]) + "."
+    strDeckPlots = "**Plots (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeckPlots[i],0))) + "%)" for i in dictDeckPlots.keys()]) + "."
     
-    Notes = strDeck  + "\n" + "\n" +  strAgendas  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
+    Notes = strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strAgendas  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
     return Notes
 
 
