@@ -311,7 +311,7 @@ elif AndOr == "OR":
     k = 0
     for strCardlabel in lstCardlabels:
         curr_code =  allcards[allcards['label'] == strCardlabel].iloc[0]['code'] #[x["code"] for x in allcards if x["label"] == strCardlabel][0]
-        decksForCard[k] = alldecks[alldecks.apply(lambda row: curr_code in row["slots"].keys(), axis=1)]
+        decksForCard[k] = alldecks[alldecks.apply(lambda row: curr_code in row["slots"].keys(), axis=1)].copy()
         k += 1 
     alldecks = pd.concat(decksForCard)
 with col3: st.info(str(len(alldecks)) + " Decks found." + "  \n" +  "Recommended: <100 (avoid long runtime)") #st.markdown('<p class="big-font">'+ "Decks: " + str(len(alldecks))  + '</p>', unsafe_allow_html=True)
