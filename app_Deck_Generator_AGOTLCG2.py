@@ -152,6 +152,8 @@ def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, inc
                         dfFinal.at[index, 'final'] = "otherpods" #row['final'] = "otherpods"
                 else:
                     dfFinal.at[index, 'final'] = "otherrestricted" #row['final'] = "otherrestricted"
+            elif row['final'] == "banned":
+                dfFinal.at[index, 'final'] = "banned1"
     return dfFinal
 
 def get_Decklist(dfDeck):
@@ -193,6 +195,7 @@ def get_Notes(dfNotes):
     #Don't Show banned cards + sort
     dfNotes = dfNotes[dfNotes['final'] != "banned"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
     #Cards not in Deck
+    dfBanned = dfNotes[dfNotes['final'] == "banned1"]
     dfAgendas = dfNotes[dfNotes['final'] == "agenda"] #Would have made it. But Agendas don't get chosen
     dfOtherVersions = dfNotes[dfNotes['final'] == "otherversions"] #Would have made it. But Other Versions are more used
     dfOtherRestricted = dfNotes[dfNotes['final'] == "otherrestricted"] #Would have made it. But other restricted Card is more used
@@ -218,6 +221,7 @@ def get_Notes(dfNotes):
     #dict
     dictDeck = dfDeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictDeckPlots = dfDeckPlots[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
+    dictBanned = dfBanned[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictAgendas = dfAgendas[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherVersions = dfOtherVersions[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherRestricted = dfOtherRestricted[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
@@ -229,6 +233,7 @@ def get_Notes(dfNotes):
     dictincludedByName = dfincludedByName[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
 
     #str
+    strBanned = "**Banned Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictBanned[i],0))) + "%)" for i in dictBanned.keys()]) + "."
     strAgendas = "**Agendas (% in Decks since release):** " + "  \n"  + "  \n".join([i[:-2] + "(" + str(int(round(100*dictAgendas[i],0))) + "%)" for i in list(dictAgendas.keys())[0:noteagendas]]) + "."
     strOtherVersions = "**Alternative Versions (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherVersions[i],0))) + "%)" for i in dictOtherVersions.keys()]) + "."
     strOtherRestricted = "**Other Restricted Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherRestricted[i],0))) + "%)" for i in dictOtherRestricted.keys()]) + "."
@@ -242,7 +247,7 @@ def get_Notes(dfNotes):
     strDeck = "**Deck (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeck[i],0))) + "%)" for i in dictDeck.keys()]) + "."
     strDeckPlots = "**Plots (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeckPlots[i],0))) + "%)" for i in dictDeckPlots.keys()]) + "."
     
-    Notes = strAgendas  + "\n" + "\n" +  strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
+    Notes = strAgendas  + "\n" + "\n" +  strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strBanned + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
     return Notes
 
 
