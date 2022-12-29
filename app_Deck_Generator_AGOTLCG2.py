@@ -284,7 +284,7 @@ with col1: strFaction = st.selectbox("Faction", sorted(alldecks['faction_name'].
 #st.write("Selected Faction:", strFaction)
 with col2: strAgenda = st.selectbox("Agenda", ["All Agendas"] + sorted(allcards[allcards['type_code'] == "agenda"]['name'].unique())) #"Valyrian Steel" #NAME NOT LABEL!!!!!
 #st.write("Selected Agenda:", strAgenda)
-AndOR = st.radio("Deckselection Rule for 'Cards used'", options = ['AND','OR'])
+AndOr = st.radio("Deckselection Rule for 'Cards used'", options = ['AND','OR'])
 lstCardlabels = st.multiselect("Cards used", sorted(allcards[allcards['type_code'] != "agenda"]['label'].unique())) #["Missandei"] #23 VS Decks. 22 VS Decks with Missandei
 #st.write("Selected Cards:", lstCardlabels)
 col3, col4 = st.columns(2)
@@ -303,9 +303,10 @@ alldecks = alldecks[alldecks['faction_name'] == strFaction]
 if strAgenda != "All Agendas": #Agenda #BY NAME NOT LABEL!
      agenda_code = allcards[allcards['name'] == strAgenda]['code'].tolist()#[x["code"] for x in allcards if x["name"] == strAgenda]
      alldecks = alldecks[alldecks.apply(lambda row: any(x in row["agendas"] for x in agenda_code), axis=1)]
-for strCardlabel in lstCardlabels: #"slots": {"01002": 1, ... }
-    curr_code =  allcards[allcards['label'] == strCardlabel].iloc[0]['code'] #[x["code"] for x in allcards if x["label"] == strCardlabel][0]
-    alldecks = alldecks[alldecks.apply(lambda row: curr_code in row["slots"].keys(), axis=1)]
+if AndOr == "AND":   
+    for strCardlabel in lstCardlabels: #"slots": {"01002": 1, ... }
+        curr_code =  allcards[allcards['label'] == strCardlabel].iloc[0]['code'] #[x["code"] for x in allcards if x["label"] == strCardlabel][0]
+        alldecks = alldecks[alldecks.apply(lambda row: curr_code in row["slots"].keys(), axis=1)]
 with col3: st.info(str(len(alldecks)) + " Decks found." + "  \n" +  "Recommended: <100 (avoid long runtime)") #st.markdown('<p class="big-font">'+ "Decks: " + str(len(alldecks))  + '</p>', unsafe_allow_html=True)
         
 # =============================================================================
