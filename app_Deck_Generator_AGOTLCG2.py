@@ -307,7 +307,7 @@ if AndOr == "AND":
     for strCardlabel in lstCardlabels: #"slots": {"01002": 1, ... }
         curr_code =  allcards[allcards['label'] == strCardlabel].iloc[0]['code'] #[x["code"] for x in allcards if x["label"] == strCardlabel][0]
         alldecks = alldecks[alldecks.apply(lambda row: curr_code in row["slots"].keys(), axis=1)]
-elseif AndOr == "OR":
+elif AndOr == "OR":
     k = 0
     for strCardlabel in lstCardlabels:
         curr_code =  allcards[allcards['label'] == strCardlabel].iloc[0]['code'] #[x["code"] for x in allcards if x["label"] == strCardlabel][0]
