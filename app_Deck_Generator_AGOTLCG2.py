@@ -284,7 +284,7 @@ with col1: strFaction = st.selectbox("Faction", sorted(alldecks['faction_name'].
 #st.write("Selected Faction:", strFaction)
 with col2: strAgenda = st.selectbox("Agenda", ["All Agendas"] + sorted(allcards[allcards['type_code'] == "agenda"]['name'].unique())) #"Valyrian Steel" #NAME NOT LABEL!!!!!
 #st.write("Selected Agenda:", strAgenda)
-AndOR = st.radio("Deckselection Rule for Cards used", options = ['AND','OR']) #'joust' #'melee' #
+AndOR = st.radio("Deckselection Rule for 'Cards used'", options = ['AND','OR'])
 lstCardlabels = st.multiselect("Cards used", sorted(allcards[allcards['type_code'] != "agenda"]['label'].unique())) #["Missandei"] #23 VS Decks. 22 VS Decks with Missandei
 #st.write("Selected Cards:", lstCardlabels)
 col3, col4 = st.columns(2)
