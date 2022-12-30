@@ -197,7 +197,7 @@ def get_Notes(dfNotes):
     
     #Don't Show banned cards + sort
     dfNotes = dfNotes[dfNotes['final'] != "banned"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
-    #dfNotes = dfNotes[dfNotes['final'] != "donotusepack"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
+    dfNotes = dfNotes[dfNotes['final'] != "donotusepack"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
     #Cards not in Deck
     dfDonotusepack = dfNotes[dfNotes['final'] == "donotusepack1"]
     dfBanned = dfNotes[dfNotes['final'] == "banned1"]
