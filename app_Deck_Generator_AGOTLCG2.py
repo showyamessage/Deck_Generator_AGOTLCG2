@@ -197,6 +197,7 @@ def get_Notes(dfNotes):
     
     #Don't Show banned cards + sort
     dfNotes = dfNotes[dfNotes['final'] != "banned"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
+    dfNotes = dfNotes[dfNotes['final'] != "donotusepack"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
     #Cards not in Deck
     dfDonotusepack = dfNotes[dfNotes['final'] == "donotusepack1"]
     dfBanned = dfNotes[dfNotes['final'] == "banned1"]
@@ -206,7 +207,7 @@ def get_Notes(dfNotes):
     dfPods = dfNotes[dfNotes['final'] == "otherpods"] #Would have made it. But other Card in the Pod is more used
     dfLimiteds = dfNotes[dfNotes['final'] == "otherlimiteds"] #Would have made it. But exclusion because of a maximum of limited cards and other limited Cards are more used
     #Other Cards
-    dfTypes = dfNotes[~dfNotes.final.isin([1, "agenda", "otherversions", "otherrestricted", "otherpods", "otherlimiteds", "banned1"])]
+    dfTypes = dfNotes[~dfNotes.final.isin([1, "agenda", "otherversions", "otherrestricted", "otherpods", "otherlimiteds", "banned1", "donotusepack1"])]
     dfPlots = dfTypes[dfTypes['type_code'] == "plot"]
     dfDrawdeck = dfTypes[dfTypes['type_code'] != "plot"]
     # dfCharacters = dfTypes[dfTypes['type_code'] == "character"]
