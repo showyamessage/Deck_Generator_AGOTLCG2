@@ -51,12 +51,13 @@ def GetCardsInDecks(dfCards,dfDecks):
     dfTripleCards = dfTripleCards.sort_values(['in decks_byname', 'in decks'], ascending = False, axis = 0) 
     return dfTripleCards
 
-def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, includeLimiteds):
+def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, includeLimiteds, DoNotUsePacks):
     includelocationsattachmentsevents = totalcards-includeCharacters
     
     dfFinal['final'] =""
     dfFinal.loc[(dfFinal.type_code == 'agenda'),'final'] = "agenda"
     dfFinal.loc[dfFinal.apply (lambda rowCards: rowCards["code"] in RL['banned'], axis=1),'final'] = "banned"
+    dfFinal.loc[(dfFinal.pack_name.isin(DoNotUsePacks)),'final'] = "donotusepack"
 
             
     #Select Cards
@@ -154,6 +155,8 @@ def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, inc
                     dfFinal.at[index, 'final'] = "otherrestricted" #row['final'] = "otherrestricted"
             elif row['final'] == "banned":
                 dfFinal.at[index, 'final'] = "banned1"
+            elif row['final'] == "donotusepack":
+                dfFinal.at[index, 'final'] = "donotusepack1"
     return dfFinal
 
 def get_Decklist(dfDeck):
@@ -195,6 +198,7 @@ def get_Notes(dfNotes):
     #Don't Show banned cards + sort
     dfNotes = dfNotes[dfNotes['final'] != "banned"].sort_values(['in decks', 'index'], ascending = False, axis = 0)
     #Cards not in Deck
+    dfDonotusepack = dfNotes[dfNotes['final'] == "donotusepack1"]
     dfBanned = dfNotes[dfNotes['final'] == "banned1"]
     dfAgendas = dfNotes[dfNotes['final'] == "agenda"] #Would have made it. But Agendas don't get chosen
     dfOtherVersions = dfNotes[dfNotes['final'] == "otherversions"] #Would have made it. But Other Versions are more used
@@ -222,6 +226,7 @@ def get_Notes(dfNotes):
     dictDeck = dfDeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictDeckPlots = dfDeckPlots[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictBanned = dfBanned[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
+    dictDonotusepack = dfDonotusepack[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictAgendas = dfAgendas[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherVersions = dfOtherVersions[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
     dictOtherRestricted = dfOtherRestricted[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
@@ -233,6 +238,7 @@ def get_Notes(dfNotes):
     dictincludedByName = dfincludedByName[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
 
     #str
+    strDonotusepack = "**Don't use Cards after Redesigns (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDonotusepack[i],0))) + "%)" for i in dictDonotusepack.keys()]) + "."
     strBanned = "**Banned Cards (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictBanned[i],0))) + "%)" for i in dictBanned.keys()]) + "."
     strAgendas = "**Agendas (% in Decks since release):** " + "  \n"  + "  \n".join([i[:-2] + "(" + str(int(round(100*dictAgendas[i],0))) + "%)" for i in list(dictAgendas.keys())[0:noteagendas]]) + "."
     strOtherVersions = "**Alternative Versions (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictOtherVersions[i],0))) + "%)" for i in dictOtherVersions.keys()]) + "."
@@ -247,7 +253,7 @@ def get_Notes(dfNotes):
     strDeck = "**Deck (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeck[i],0))) + "%)" for i in dictDeck.keys()]) + "."
     strDeckPlots = "**Plots (% in Decks since release):** " + "  \n"  + "  \n".join([i + "(" + str(int(round(100*dictDeckPlots[i],0))) + "%)" for i in dictDeckPlots.keys()]) + "."
     
-    Notes = strAgendas  + "\n" + "\n" +  strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strBanned + "\n" + "\n" +  strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
+    Notes = strAgendas  + "\n" + "\n" +  strDeckPlots  + "\n" + "\n" +  strDeck  + "\n" + "\n" +  strBanned + "\n" + "\n" + strDonotusepack + "\n" + "\n" + strOtherRestricted + "\n" + "\n" + strPods + "\n" + "\n" + strLimiteds + "\n" + "\n" + strincludedByName + "\n" + "\n" + strOtherVersions  + "\n" + "\n" + strPlots + "\n" + "\n" + strDrawdeck
     return Notes
 
 
@@ -349,7 +355,7 @@ else:
             if not blAllowAfterRedesigns:
                 PacksAfterRedesign = allpacks[allpacks['available'] > allpacks[allpacks['name'] == "Redesigns"].iloc[0]['available']]['name'].tolist()#=[i for i in AllPacks if (date.fromisoformat(releaseRedesign) <= date.fromisoformat(i["available"]))]
                 DoNotUsePacks = DoNotUsePacks + PacksAfterRedesign
-            relevantcards = allcards[~allcards.pack_name.isin(DoNotUsePacks)]
+            relevantcards = allcards #[~allcards.pack_name.isin(DoNotUsePacks)]
             #1 generate Dataframe with List of Cards in Decks
             dfCardsInDecks = GetCardsInDecks(relevantcards,alldecks)
             #st.dataframe(dfCardsInDecks[['label', 'copy', 'in decks']].head())
@@ -382,7 +388,7 @@ else:
             includeCharacters = round(dictCountTypes['count_character'])
             includeLimiteds = round(dictCountTypes['count_limited'])
             #Deckbau Entscheidungen eintragen
-            dfFinal = GenerateDecklist(dfCardsInDecks, RL, totalcards, totalplots, includeCharacters, includeLimiteds)
+            dfFinal = GenerateDecklist(dfCardsInDecks, RL, totalcards, totalplots, includeCharacters, includeLimiteds, DoNotUsePacks)
             
             #3 generiert daraus decklist und Notes
             strDecklist = get_Decklist(dfFinal)
