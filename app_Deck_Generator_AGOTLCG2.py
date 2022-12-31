@@ -55,9 +55,10 @@ def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, inc
     includelocationsattachmentsevents = totalcards-includeCharacters
     
     dfFinal['final'] =""
-    dfFinal.loc[(dfFinal.type_code == 'agenda'),'final'] = "agenda"
     dfFinal.loc[dfFinal.apply (lambda rowCards: rowCards["code"] in RL['banned'], axis=1),'final'] = "banned"
     dfFinal.loc[(dfFinal.pack_name.isin(DoNotUsePacks)),'final'] = "donotusepack"
+    dfFinal.loc[(dfFinal.type_code == 'agenda'),'final'] = "agenda"
+    
 
             
     #Select Cards
