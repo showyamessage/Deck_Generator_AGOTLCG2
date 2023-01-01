@@ -17,7 +17,7 @@ def GetCardsInDecks(dfCards,dfDecks):
     #decks created since release
     dfCards1['decksCREATEDsincerelease'] = dfCards1.apply (lambda rowCards: len(dfDecks[dfDecks["date_creation"] >= rowCards["available"]]), axis=1)    
     dfCards1 = dfCards1[dfCards1['decksCREATEDsincerelease'] != 0]
-    dfCards1['decksCREATEDsincerelease_byname'] = dfCards1.apply (lambda rowCards: rowCards['decksCREATEDsincerelease'] if len(rowCards['releaseDates_byname']) == 1 else len(dfDecks[dfDecks["date_creation"] >= rowCards['available']]), axis=1) #rowCards['minDateVersion']]), axis=1)
+    dfCards1['decksCREATEDsincerelease_byname'] = dfCards1.apply (lambda rowCards: rowCards['decksCREATEDsincerelease'] if len(rowCards['releaseDates_byname']) == 1 else len(dfDecks[dfDecks["date_creation"] >= rowCards['minDateVersion']]), axis=1)
     my_bar.progress(1)
     
     #deckcount
@@ -42,7 +42,7 @@ def GetCardsInDecks(dfCards,dfDecks):
     my_bar.progress(40)
     
     #deckcount by Name
-    dfTripleCards['deckcount_byname'] = dfTripleCards.apply(lambda rowCards: rowCards['deckcount'] if len(rowCards['releaseDates_byname']) == 1 else len(dfDecks[dfDecks.apply(lambda rowDecks: (rowCards['name'] in [dictCodeName[code] for code in rowDecks["slots"].keys() if rowDecks["slots"][code]>= rowCards["copy"]]) if rowDecks["date_creation"] >= rowCards['available'] else False, axis=1)]), axis=1)#rowCards['minDateVersion'] else False, axis=1)]), axis=1)
+    dfTripleCards['deckcount_byname'] = dfTripleCards.apply(lambda rowCards: rowCards['deckcount'] if len(rowCards['releaseDates_byname']) == 1 else len(dfDecks[dfDecks.apply(lambda rowDecks: (rowCards['name'] in [dictCodeName[code] for code in rowDecks["slots"].keys() if rowDecks["slots"][code]>= rowCards["copy"]]) if rowDecks["date_creation"] >= rowCards['minDateVersion'] else False, axis=1)]), axis=1)
     my_bar.progress(99)
     
     #Calculation
@@ -86,7 +86,7 @@ def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, inc
                 if not blIsRestricted or (not blChosenRestricted) or (blChosenRestricted and 0 < len(dfFinal[dfFinal.apply (lambda rowCards: rowCards['final']==1 and rowCards['code'] == row['code'], axis=1)])):
                     if not blChosenPod or (blChosenPod and 0 < len(dfFinal[dfFinal.apply (lambda rowCards: rowCards['final']==1 and rowCards['code'] == row['code'], axis=1)])):
                     
-                        if 0 < len(dfFinal[dfFinal.apply (lambda rowCards: (rowCards['in decks'] > row['in decks'] or rowCards['final']==1) and rowCards['name'] == row['name'] and (rowCards['label'] != row['label']), axis=1)]):#(lambda rowCards: rowCards['final']==1 and rowCards['name'] == row['name'] and (rowCards['label'] != row['label']), axis=1)]):
+                        if 0 < len(dfFinal[dfFinal.apply (lambda rowCards: rowCards['final']==1 and rowCards['name'] == row['name'] and (rowCards['label'] != row['label']), axis=1)]):
                             dfFinal.at[index, 'final'] = "otherversions" #row['final'] = "otherversions"
                         else:
                             if row["text"].find("Limited.") == -1: #NO LIMITED
