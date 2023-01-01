@@ -219,7 +219,7 @@ def get_Notes(dfNotes):
     # #LIMITEDS vs Non-limiteds?    
     
     #INCLUDED BY NAME Documentation
-    dfDeck =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] != "plot")]
+    dfDeck =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] == 'character')]#!= "plot")]
     dfDeckPlots =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] == "plot")]
     minInDecks = min(dfDeck[dfDeck['in decks'] == dfDeck['in decks_byname']]['in decks'])
     minInDecksPlots = min(dfDeckPlots[dfDeckPlots['in decks'] == dfDeckPlots['in decks_byname']]['in decks'])
