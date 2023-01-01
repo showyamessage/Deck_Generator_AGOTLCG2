@@ -218,12 +218,16 @@ def get_Notes(dfNotes):
     # dfEvents = dfTypes[dfTypes['type_code'] == "event"]
     # #LIMITEDS vs Non-limiteds?    
     
+    
+    dfDeck =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] != "plot")]
     #INCLUDED BY NAME Documentation
-    dfDeck =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] == 'character')]#!= "plot")]
+    dfDeckCharacters =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] == "character")]
+    dfDeckNonCharacters =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] != "plot") & (dfNotes['type_code'] != "character")]
     dfDeckPlots =  dfNotes[(dfNotes['final'] == 1) & (dfNotes['type_code'] == "plot")]
-    minInDecks = min(dfDeck[dfDeck['in decks'] == dfDeck['in decks_byname']]['in decks'])
+    minInDecksCharacters = min(dfDeckCharacters[dfDeckCharacters['in decks'] == dfDeckCharacters['in decks_byname']]['in decks'])
+    minInDecksNonCharacters = min(dfDeckNonCharacters[dfDeckNonCharacters['in decks'] == dfDeckNonCharacters['in decks_byname']]['in decks'])
     minInDecksPlots = min(dfDeckPlots[dfDeckPlots['in decks'] == dfDeckPlots['in decks_byname']]['in decks'])
-    dfincludedByName = pd.concat([dfDeck[dfDeck['in decks'] < minInDecks], dfDeckPlots[dfDeckPlots['in decks'] < minInDecksPlots]]).sort_values('in decks', ascending = False, axis = 0)  #Would not have made it. But in sum all Cards with that name are used enough.
+    dfincludedByName = pd.concat([dfDeckCharacters[dfDeckCharacters['in decks'] < minInDecksCharacters], [dfDeckNonCharacters[dfDeckNonCharacters['in decks'] < minInDecksNonCharacters], dfDeckPlots[dfDeckPlots['in decks'] < minInDecksPlots]]).sort_values('in decks', ascending = False, axis = 0)  #Would not have made it. But in sum all Cards with that name are used enough.
     
     #dict
     dictDeck = dfDeck[['identifier', 'in decks']].set_index('identifier').to_dict()['in decks']
