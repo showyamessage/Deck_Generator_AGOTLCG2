@@ -86,7 +86,7 @@ def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, inc
                 if not blIsRestricted or (not blChosenRestricted) or (blChosenRestricted and 0 < len(dfFinal[dfFinal.apply (lambda rowCards: rowCards['final']==1 and rowCards['code'] == row['code'], axis=1)])):
                     if not blChosenPod or (blChosenPod and 0 < len(dfFinal[dfFinal.apply (lambda rowCards: rowCards['final']==1 and rowCards['code'] == row['code'], axis=1)])):
                     
-                        if 0 < len(dfFinal[dfFinal.apply (lambda rowCards: rowCards['final']==1 and rowCards['name'] == row['name'] and (rowCards['label'] != row['label']), axis=1)]):
+                        if 0 < len(dfFinal[dfFinal.apply (lambda rowCards: (rowCards['in decks'] > row['in decks'] or rowCards['final']==1) and rowCards['name'] == row['name'] and (rowCards['label'] != row['label']), axis=1)]):#(lambda rowCards: rowCards['final']==1 and rowCards['name'] == row['name'] and (rowCards['label'] != row['label']), axis=1)]):
                             dfFinal.at[index, 'final'] = "otherversions" #row['final'] = "otherversions"
                         else:
                             if row["text"].find("Limited.") == -1: #NO LIMITED
