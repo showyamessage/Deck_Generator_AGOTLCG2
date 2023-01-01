@@ -48,7 +48,8 @@ def GetCardsInDecks(dfCards,dfDecks):
     #Calculation
     dfTripleCards['in decks'] = dfTripleCards.apply (lambda rowCards: rowCards['deckcount']/rowCards['decksCREATEDsincerelease'], axis=1)
     dfTripleCards['in decks_byname'] = dfTripleCards.apply (lambda rowCards: rowCards['deckcount_byname']/rowCards['decksCREATEDsincerelease_byname'], axis=1)
-    dfTripleCards = dfTripleCards.sort_values(['in decks_byname', 'in decks'], ascending = False, axis = 0) 
+    dfTripleCards['max(in decks, in decks_byname)'] = dfTripleCards.apply (lambda rowCards: max(rowCards['in decks'],rowCards['in decks_byname']), axis=1)
+    dfTripleCards = dfTripleCards.sort_values(['max(in decks, in decks_byname)', 'in decks', 'in decks_byname'], ascending = False, axis = 0) 
     return dfTripleCards
 
 def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, includeLimiteds, DoNotUsePacks):
