@@ -70,7 +70,7 @@ def GenerateDecklist(dfFinal, RL, totalcards, totalplots, includeCharacters, inc
     countLimiteds = 0
     countCharacters = 0
     countlocationsattachmentsevents = 0
-    dfFinal = dfFinal.sort_values(['in decks_byname','in decks'], ascending = False, axis = 0)
+    dfFinal = dfFinal.sort_values(['max(in decks, in decks_byname)', 'in decks', 'in decks_byname'], ascending = False, axis = 0)
     dfFinal = dfFinal.reset_index()
     for index, row in dfFinal.iterrows():
         if countCards < totalcards or countPlots < totalplots:
